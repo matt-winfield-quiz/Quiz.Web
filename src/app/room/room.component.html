@@ -1,1 +1,5 @@
-<button (click)="sendMessage()">Send!</button>
+<label for="room-name">Room name:</label>
+<input id="room-name" [(ngModel)]="roomName" />
+<label for="password">Room password:</label>
+<input id="password" type="password" [(ngModel)]="roomPassword" />
+<button (click)="sendMessage()">Create Room</button>

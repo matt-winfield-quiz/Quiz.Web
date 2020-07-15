@@ -8,9 +8,12 @@ import { SignalRService } from '../services/signal-r.service';
 })
 export class RoomComponent {
 
+	public roomName: string;
+	public roomPassword: string;
+
 	constructor(private _signalRService: SignalRService) { }
 
 	public async sendMessage(): Promise<void> {
-		return await this._signalRService.createRoom("MyRoom", "1234");
+		return await this._signalRService.createRoom(this.roomName, this.roomPassword);
 	}
 }

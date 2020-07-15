@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { RoomComponent } from './room/room.component';
 import { ConfigService } from './services/config/config.service';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 export function load(config: ConfigService) {
 	return () => config.load();
@@ -20,7 +21,8 @@ export function load(config: ConfigService) {
 	imports: [
 		HttpClientModule,
 		BrowserModule,
-		AppRoutingModule
+		AppRoutingModule,
+		FormsModule
 	],
 	providers: [
 		{
