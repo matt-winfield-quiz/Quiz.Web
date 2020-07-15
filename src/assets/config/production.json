@@ -1,0 +1,6 @@
+{
+	"HOST_API": "https://quiz.matt-winfield.com",
+	"API_ENDPOINTS": {
+		"QUIZ_HUB": "/QuizHub"
+	}
+}
