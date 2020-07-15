@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
+import { ConfigService } from './config/config.service';
+import { ApiEndpoints } from './config/ApiEndpoints';
 
 @Injectable({
 	providedIn: 'root'
@@ -7,7 +9,7 @@ import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
 export class SignalRService {
 	private _hubConnection: HubConnection;
 
-	constructor() {
+	constructor(private _configService: ConfigService) {
 		this._hubConnection = this.buildConnection();
 		this.startConnection();
 	}
@@ -17,7 +19,7 @@ export class SignalRService {
 	}
 
 	private buildConnection(): HubConnection {
-		let hubUrl: string = "https://localhost:44313/QuizHub"
+		let hubUrl: string = this._configService.getApiEndpoint(ApiEndpoints.QUIZ_HUB);
 
 		return new HubConnectionBuilder()
 			.withUrl(hubUrl)
@@ -31,7 +33,7 @@ export class SignalRService {
 			.catch(error => {
 				console.warn("Error while starting connection: " + error);
 
-				// setTimeout(() => this.startConnection(), 3000);
+				setTimeout(() => this.startConnection(), 3000);
 			});
 	}
 
