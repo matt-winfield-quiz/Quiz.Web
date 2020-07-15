@@ -13,7 +13,7 @@ export class RoomComponent {
 
 	constructor(private _signalRService: SignalRService) { }
 
-	public async sendMessage(): Promise<void> {
+	public async createRoom(): Promise<void> {
 		return await this._signalRService.createRoom(this.roomName, this.roomPassword);
 	}
 }

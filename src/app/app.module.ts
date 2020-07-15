@@ -1,6 +1,7 @@
 import { APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -8,6 +9,8 @@ import { RoomComponent } from './room/room.component';
 import { ConfigService } from './services/config/config.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { ToastrModule } from 'ngx-toastr';
+import { CommonModule } from '@angular/common';
 
 export function load(config: ConfigService) {
 	return () => config.load();
@@ -19,10 +22,13 @@ export function load(config: ConfigService) {
 		RoomComponent
 	],
 	imports: [
+		CommonModule,
 		HttpClientModule,
 		BrowserModule,
 		AppRoutingModule,
-		FormsModule
+		FormsModule,
+		BrowserAnimationsModule,
+		ToastrModule.forRoot()
 	],
 	providers: [
 		{
