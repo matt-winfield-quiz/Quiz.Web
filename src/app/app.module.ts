@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { RoomComponent } from './room/room.component';
+import { CreateRoomComponent } from './rooms/create-room/create-room.component';
 import { ConfigService } from './services/config/config.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -19,7 +19,7 @@ export function load(config: ConfigService) {
 @NgModule({
 	declarations: [
 		AppComponent,
-		RoomComponent
+		CreateRoomComponent
 	],
 	imports: [
 		CommonModule,

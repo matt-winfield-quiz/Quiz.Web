@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
-import { SignalRService } from '../services/SignalR/signal-r.service';
-import { StorageService } from '../services/storage.service';
+import { SignalRService } from '../../services/SignalR/signal-r.service';
+import { StorageService } from '../../services/storage.service';
 import { ToastrService } from 'ngx-toastr';
-import { SignalRMethod } from '../services/SignalR/SignalRMethod';
+import { SignalRMethod } from '../../services/SignalR/SignalRMethod';
 
 @Component({
-	selector: 'app-room',
-	templateUrl: './room.component.html',
-	styleUrls: ['./room.component.scss']
+	selector: 'app-create-room',
+	templateUrl: './create-room.component.html',
+	styleUrls: ['./create-room.component.scss']
 })
-export class RoomComponent {
+export class CreateRoomComponent {
 	public roomName: string;
 	public roomPassword: string;
 	public success: string;
