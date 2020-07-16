@@ -10,8 +10,10 @@ import { ConfigService } from './services/config/config.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
+import { NgxSpinnerModule } from "ngx-spinner";
 import { CommonModule } from '@angular/common';
 import { RoomsComponent } from './rooms/rooms/rooms.component';
+import { RoomComponent } from './rooms/room/room/room.component';
 
 export function load(config: ConfigService) {
 	return () => config.load();
@@ -21,7 +23,8 @@ export function load(config: ConfigService) {
 	declarations: [
 		AppComponent,
 		CreateRoomComponent,
-		RoomsComponent
+		RoomsComponent,
+		RoomComponent
 	],
 	imports: [
 		CommonModule,
@@ -30,6 +33,7 @@ export function load(config: ConfigService) {
 		AppRoutingModule,
 		FormsModule,
 		BrowserAnimationsModule,
+		NgxSpinnerModule,
 		ToastrModule.forRoot()
 	],
 	providers: [

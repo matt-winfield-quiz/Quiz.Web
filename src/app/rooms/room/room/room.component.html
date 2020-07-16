@@ -1,0 +1,27 @@
+<ng-container *ngIf="!hasJoined">
+	<div class="form pt-4 px-6">
+		<label for="intialUsername" class="label">Name:</label>
+		<input id="intialUsername" type="text" class="input" [(ngModel)]="username" />
+
+		<label for="password" class="label">Room password:</label>
+		<input id="roomPassword" type="password" class="input" />
+
+		<button class="button mt-2 mx-2 is-primary" (click)="joinRoom()">Join</button>
+		<a [routerLink]="['/rooms']" class="button mx-2 mt-2">Cancel</a>
+	</div>
+</ng-container>
+<div *ngIf="hasJoined" class="pt-4 px-6">
+	<label for="username" class="label">Name:</label>
+	<input id="username" type="text" class="input" [(ngModel)]="username" />
+	<button class="button mt-2 mx-2 is-primary" (click)="updateUsername()">Update Name</button>
+
+	<div class="tile is-ancestore">
+		<div class="tile is-parent" *ngFor="let user of room?.usersInRoom">
+			<div class="tile is-child notification is-primary">
+				<div class="title">
+					{{user.name}}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -4,5 +4,5 @@
 	<label for="password" class="label">Room password:</label>
 	<input id="password" type="password" class="input" [(ngModel)]="roomPassword" />
 	<button class="button mt-2 mx-2 is-primary" (click)="createRoom()">Create Room</button>
-	<a href='/rooms' class="button mx-2 mt-2">Cancel</a>
+	<a [routerLink]="['/rooms']" class="button mx-2 mt-2">Cancel</a>
 </div>

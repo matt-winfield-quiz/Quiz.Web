@@ -1,6 +1,6 @@
 <div class="level px-4 py-2">
 	<div class="title level-left">Rooms</div>
-	<a href="/rooms/create" class="button is-primary level-right">Create Room</a>
+	<a [routerLink]="['/rooms/create']" class="button is-primary level-right">Create Room</a>
 </div>
 <div class="section">
 	<div class="row header columns my-2 has-background-grey has-text-light">
@@ -10,6 +10,9 @@
 	<div class="row columns my-2" *ngFor="let room of rooms">
 		<div class="column is-one-fifth">{{room.id}}</div>
 		<div class="column">{{room.name}}</div>
+		<div class="column is-one-fifth">
+			<a [routerLink]="['/rooms', room.id]" class="button is-primary">Join</a>
+		</div>
 	</div>
 	<div *ngIf="rooms?.length == 0">No rooms!</div>
 </div>
