@@ -3,6 +3,7 @@ import { SignalRService } from '../../services/SignalR/signal-r.service';
 import { StorageService } from '../../services/storage.service';
 import { ToastrService } from 'ngx-toastr';
 import { SignalRMethod } from '../../services/SignalR/SignalRMethod';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-create-room',
@@ -14,16 +15,18 @@ export class CreateRoomComponent {
 	public roomPassword: string;
 	public success: string;
 
-	constructor(private _signalRService: SignalRService, private _storageService: StorageService, private toastr: ToastrService) {
-		_signalRService.onMethod(SignalRMethod.RoomCreated, (token) => this.onRoomCreated(token));
+	constructor(private _signalRService: SignalRService, private _storageService: StorageService,
+		private toastr: ToastrService, private router: Router) {
+		_signalRService.onMethod(SignalRMethod.RoomCreated, (token, roomId) => this.onRoomCreated(token, roomId));
 	}
 
 	public async createRoom(): Promise<void> {
-		return await this._signalRService.createRoom(this.roomName, this.roomPassword);
+		await this._signalRService.createRoom(this.roomName, this.roomPassword);
 	}
 
-	private onRoomCreated(token: string): void {
+	private onRoomCreated(token: string, roomId: number): void {
 		this._storageService.storeJwtToken(token);
+		this.router.navigate(['/rooms', roomId.toString()])
 		this.toastr.success("Room created succesfully!");
 	}
 }

@@ -57,9 +57,9 @@ export class SignalRService {
 	}
 
 	private createErrorHandledSignalRMethod(newMethod: (...args: any[]) => void): (...args: any[]) => void {
-		return (args) => {
+		return (...args) => {
 			try {
-				newMethod(args)
+				newMethod(...args)
 			} catch (e) {
 				console.error('ERROR in SignalR method:', e);
 			}
