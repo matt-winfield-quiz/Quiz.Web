@@ -6,5 +6,7 @@ export enum SignalRMethod {
 	// Server -> Client
 	RoomCreated = 'RoomCreated',
 	UserJoinRoomSuccess = 'UserJoinRoomSuccess',
-	UserJoinRoomFail = 'UserJoinRoomFail'
+	UserJoinRoomFail = 'UserJoinRoomFail',
+	UserJoinedRoom = "UserJoinedRoom",
+	UserLeftRoom = "UserLeftRoom"
 }

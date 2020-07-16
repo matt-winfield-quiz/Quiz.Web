@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { SignalRMethod } from 'src/app/services/SignalR/SignalRMethod';
 import { RoomsService } from 'src/app/services/http/rooms.service';
 import { Room } from 'src/app/models/Room';
+import { User } from 'src/app/models/User';
 
 @Component({
 	selector: 'app-room',
@@ -25,6 +26,8 @@ export class RoomComponent implements OnInit {
 
 		_signalRService.onMethod(SignalRMethod.UserJoinRoomSuccess, () => this.onJoinSuccess());
 		_signalRService.onMethod(SignalRMethod.UserJoinRoomFail, () => this.onJoinFail());
+		_signalRService.onMethod(SignalRMethod.UserJoinedRoom, (user) => this.onUserJoin(user));
+		_signalRService.onMethod(SignalRMethod.UserLeftRoom, (userId) => this.onUserLeave(userId));
 	}
 
 	public async ngOnInit(): Promise<void> {
@@ -54,5 +57,14 @@ export class RoomComponent implements OnInit {
 		this.toastr.error("Failed to join room!");
 		this._isLoading = false;
 		this.spinner.hide();
+	}
+
+	private onUserJoin(user: User): void {
+		this.room.usersInRoom.push(user);
+	}
+
+	private onUserLeave(userId: string): void {
+		let newUsersInRoom = this.room.usersInRoom.filter(user => user.id != userId);
+		this.room.usersInRoom = newUsersInRoom;
 	}
 }
