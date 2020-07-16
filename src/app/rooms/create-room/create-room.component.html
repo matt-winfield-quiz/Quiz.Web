@@ -1,5 +1,8 @@
-<label for="room-name">Room name:</label>
-<input id="room-name" [(ngModel)]="roomName" />
-<label for="password">Room password:</label>
-<input id="password" type="password" [(ngModel)]="roomPassword" />
-<button (click)="createRoom()">Create Room</button>
+<div class="form pt-4 px-6">
+	<label for="room-name" class="label">Room name:</label>
+	<input id="room-name" class="input" [(ngModel)]="roomName" />
+	<label for="password" class="label">Room password:</label>
+	<input id="password" type="password" class="input" [(ngModel)]="roomPassword" />
+	<button class="button mt-2 mx-2 is-primary" (click)="createRoom()">Create Room</button>
+	<a href='/rooms' class="button mx-2 mt-2">Cancel</a>
+</div>

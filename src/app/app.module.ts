@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
+import { RoomsComponent } from './rooms/rooms/rooms.component';
 
 export function load(config: ConfigService) {
 	return () => config.load();
@@ -19,7 +20,8 @@ export function load(config: ConfigService) {
 @NgModule({
 	declarations: [
 		AppComponent,
-		CreateRoomComponent
+		CreateRoomComponent,
+		RoomsComponent
 	],
 	imports: [
 		CommonModule,

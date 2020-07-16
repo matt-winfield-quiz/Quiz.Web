@@ -1,0 +1,15 @@
+<div class="level px-4 py-2">
+	<div class="title level-left">Rooms</div>
+	<a href="/rooms/create" class="button is-primary level-right">Create Room</a>
+</div>
+<div class="section">
+	<div class="row header columns my-2 has-background-grey has-text-light">
+		<div class="column is-one-fifth">Room Id</div>
+		<div class="column">Room Name</div>
+	</div>
+	<div class="row columns my-2" *ngFor="let room of rooms">
+		<div class="column is-one-fifth">{{room.id}}</div>
+		<div class="column">{{room.name}}</div>
+	</div>
+</div>
+<div *ngIf="rooms?.length == 0">No rooms!</div>
