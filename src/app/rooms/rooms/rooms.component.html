@@ -11,5 +11,5 @@
 		<div class="column is-one-fifth">{{room.id}}</div>
 		<div class="column">{{room.name}}</div>
 	</div>
+	<div *ngIf="rooms?.length == 0">No rooms!</div>
 </div>
-<div *ngIf="rooms?.length == 0">No rooms!</div>
