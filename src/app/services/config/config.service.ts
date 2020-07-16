@@ -22,12 +22,12 @@ export class ConfigService {
 	}
 
 	public getHost(): string {
-		if (!this._loaded) throw "Config not loaded!";
+		if (!this._loaded) throw new Error("Config not loaded!");
 		return this._hostApi;
 	}
 
 	public getApiEndpoint(endpointName: string) {
-		if (!this._loaded) throw "Config not loaded!";
+		if (!this._loaded) throw new Error("Config not loaded!");
 		return this._hostApi + this._apiEndpoints[endpointName];
 	}
 }
