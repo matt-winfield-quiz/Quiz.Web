@@ -25,7 +25,7 @@ export class RoomComponent implements OnInit {
 	constructor(private route: ActivatedRoute, private _signalRService: SignalRService,
 		private _roomsService: RoomsService, private spinner: NgxSpinnerService, private toastr: ToastrService) {
 
-		_signalRService.onMethod(SignalRMethod.UserJoinRoomSuccess, () => this.onJoinSuccess());
+		_signalRService.onMethod(SignalRMethod.UserJoinRoomSuccess, async () => await this.onJoinSuccess());
 		_signalRService.onMethod(SignalRMethod.UserJoinRoomFail, () => this.onJoinFail());
 		_signalRService.onMethod(SignalRMethod.UserJoinedRoom, (user) => this.onUserJoin(user));
 		_signalRService.onMethod(SignalRMethod.UserLeftRoom, (userId) => this.onUserLeave(userId));
@@ -38,7 +38,6 @@ export class RoomComponent implements OnInit {
 	public async ngOnInit(): Promise<void> {
 		this.route.paramMap.subscribe(async params => {
 			this._roomId = +params.get('roomId');
-			this.room = await this._roomsService.getRoom(this._roomId);
 		})
 	}
 
@@ -59,9 +58,12 @@ export class RoomComponent implements OnInit {
 		await this._signalRService.clear(this._roomId);
 	}
 
-	private onJoinSuccess(): void {
+	private async onJoinSuccess(): Promise<void> {
 		this.spinner.hide();
 		this.hasJoined = true;
+		this.spinner.show();
+		this.room = await this._roomsService.getRoom(this._roomId);
+		this.spinner.hide();
 	}
 
 	private onJoinFail(): void {
