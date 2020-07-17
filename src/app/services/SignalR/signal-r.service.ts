@@ -37,6 +37,10 @@ export class SignalRService {
 		return await this._hubConnection.send(SignalRMethod.ClearScores, roomId);
 	}
 
+	public async closeRoom(roomId: number) {
+		return await this._hubConnection.send(SignalRMethod.RemoveRoom, roomId);
+	}
+
 	public onMethod(methodName: SignalRMethod, newMethod: (...args: any[]) => void): void {
 		let errorHandledMethod = this.createErrorHandledSignalRMethod(newMethod);
 

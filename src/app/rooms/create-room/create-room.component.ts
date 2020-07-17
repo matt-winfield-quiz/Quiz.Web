@@ -18,7 +18,7 @@ export class CreateRoomComponent {
 
 	constructor(private _signalRService: SignalRService, private _storageService: StorageService,
 		private toastr: ToastrService, private router: Router, private spinner: NgxSpinnerService) {
-		_signalRService.onMethod(SignalRMethod.RoomCreated, (token, roomId) => this.onRoomCreated(token, roomId));
+		_signalRService.onMethod(SignalRMethod.RoomCreateSuccess, (token, roomId) => this.onRoomCreated(token, roomId));
 	}
 
 	public async createRoom(): Promise<void> {

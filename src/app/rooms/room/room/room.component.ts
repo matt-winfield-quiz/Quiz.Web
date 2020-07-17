@@ -58,6 +58,10 @@ export class RoomComponent implements OnInit {
 		await this._signalRService.clear(this._roomId);
 	}
 
+	public async closeRoom(): Promise<void> {
+		await this._signalRService.closeRoom(this._roomId);
+	}
+
 	private async onJoinSuccess(): Promise<void> {
 		this.spinner.hide();
 		this.hasJoined = true;
