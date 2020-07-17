@@ -21,8 +21,8 @@ export class SignalRService {
 		return await this._hubConnection.send(SignalRMethod.CreateRoom, name, password);
 	}
 
-	public async joinRoom(roomId: number, username: string): Promise<void> {
-		return await this._hubConnection.send(SignalRMethod.JoinRoom, roomId, username);
+	public async joinRoom(roomId: number, username: string, roomPassword: string): Promise<void> {
+		return await this._hubConnection.send(SignalRMethod.JoinRoom, roomId, username, roomPassword);
 	}
 
 	public async updateUsername(username: string): Promise<void> {

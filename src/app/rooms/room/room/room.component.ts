@@ -17,9 +17,11 @@ import { BuzzResult } from 'src/app/models/BuzzResult';
 export class RoomComponent implements OnInit {
 	public hasJoined: boolean = false;
 	public username: string;
+	public roomPassword: string;
 	public room: Room;
 	public buzzResult: BuzzResult;
 	public shouldDisplayRoomClosedModal: boolean = false;
+	public shouldDisplayIncorrectPasswordPrompt: boolean = false;
 
 	private _roomId: number;
 
@@ -27,7 +29,7 @@ export class RoomComponent implements OnInit {
 		private _roomsService: RoomsService, private spinner: NgxSpinnerService, private toastr: ToastrService) {
 
 		_signalRService.onMethod(SignalRMethod.UserJoinRoomSuccess, async () => await this.onJoinSuccess());
-		_signalRService.onMethod(SignalRMethod.UserJoinRoomFail, () => this.onJoinFail());
+		_signalRService.onMethod(SignalRMethod.UserJoinRoomFail, (message) => this.onJoinFail(message));
 		_signalRService.onMethod(SignalRMethod.UserJoinedRoom, (user) => this.onUserJoin(user));
 		_signalRService.onMethod(SignalRMethod.UserLeftRoom, (userId) => this.onUserLeave(userId));
 		_signalRService.onMethod(SignalRMethod.UserUpdatedName, (userId, newUsername) => this.onUserUpdatedName(userId, newUsername));
@@ -45,7 +47,7 @@ export class RoomComponent implements OnInit {
 
 	public async joinRoom(): Promise<void> {
 		this.spinner.show();
-		await this._signalRService.joinRoom(this._roomId, this.username);
+		await this._signalRService.joinRoom(this._roomId, this.username, this.roomPassword);
 	}
 
 	public async updateUsername(): Promise<void> {
@@ -72,8 +74,11 @@ export class RoomComponent implements OnInit {
 		this.spinner.hide();
 	}
 
-	private onJoinFail(): void {
+	private onJoinFail(message: string): void {
 		this.toastr.error("Failed to join room!");
+		if (message == "INCORRECT_PASSWORD") {
+			this.shouldDisplayIncorrectPasswordPrompt = true;
+		}
 		this.spinner.hide();
 	}
 
