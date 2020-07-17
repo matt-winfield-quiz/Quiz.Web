@@ -19,6 +19,7 @@ export class RoomComponent implements OnInit {
 	public username: string;
 	public room: Room;
 	public buzzResult: BuzzResult;
+	public shouldDisplayRoomClosedModal: boolean = false;
 
 	private _roomId: number;
 
@@ -33,6 +34,7 @@ export class RoomComponent implements OnInit {
 		_signalRService.onMethod(SignalRMethod.BuzzerPressed, (user, buzzResult) => this.onBuzzerPressed(user, buzzResult));
 		_signalRService.onMethod(SignalRMethod.BuzzerPressSuccess, (buzzResult) => this.onBuzzPressResponse(buzzResult))
 		_signalRService.onMethod(SignalRMethod.ScoresCleared, () => this.onScoresCleared());
+		_signalRService.onMethod(SignalRMethod.RoomClosed, (roomId) => this.onRoomClosed(roomId))
 	}
 
 	public async ngOnInit(): Promise<void> {
@@ -76,15 +78,17 @@ export class RoomComponent implements OnInit {
 	}
 
 	private onUserJoin(user: User): void {
-		this.room.usersInRoom.push(user);
+		this.room?.usersInRoom.push(user);
 	}
 
 	private onUserLeave(userId: string): void {
-		let newUsersInRoom = this.room.usersInRoom.filter(user => user.id != userId);
-		this.room.usersInRoom = newUsersInRoom;
+		if (this.room) {
+			let newUsersInRoom = this.room.usersInRoom.filter(user => user.id != userId);
+			this.room.usersInRoom = newUsersInRoom;
+		}
 	}
 
-	private onUserUpdatedName(userId: string, newUsername: string) {
+	private onUserUpdatedName(userId: string, newUsername: string): void {
 		this.room.usersInRoom.forEach(user => {
 			if (user.id == userId) {
 				user.name = newUsername;
@@ -92,7 +96,7 @@ export class RoomComponent implements OnInit {
 		});
 	}
 
-	private onBuzzerPressed(user: User, buzzResult: BuzzResult) {
+	private onBuzzerPressed(user: User, buzzResult: BuzzResult): void {
 		this.room.usersInRoom.forEach(userInRoom => {
 			if (userInRoom.id == user.id) {
 				userInRoom.buzzResult = buzzResult;
@@ -100,16 +104,22 @@ export class RoomComponent implements OnInit {
 		});
 	}
 
-	private onBuzzPressResponse(buzzResult: BuzzResult) {
+	private onBuzzPressResponse(buzzResult: BuzzResult): void {
 		this.buzzResult = buzzResult;
 	}
 
-	private onScoresCleared() {
+	private onScoresCleared(): void {
 		this.buzzResult = undefined;
 
 		this.room.usersInRoom.forEach(user => {
 			user.buzzResult = null;
 		});
+	}
+
+	private onRoomClosed(roomId: number): void {
+		if (roomId == this._roomId) {
+			this.shouldDisplayRoomClosedModal = true;
+		}
 	}
 
 	private getBuzzerClass(): string {

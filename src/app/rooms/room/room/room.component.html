@@ -56,13 +56,17 @@
 	</div>
 
 	<button class="button" (click)="clear()">Clear</button>
-	<button class="button is-danger" (click)="closeRoom()">Close room</button>
+	<button class="button is-danger mx-2" (click)="closeRoom()">Close room</button>
 </div>
 
-<div class="modal">
+<div class="modal" [class.is-active]="shouldDisplayRoomClosedModal">
 	<div class="modal-background"></div>
 	<div class="modal-content">
-
+		<div class="notification is-danger">
+			<div class="title">Room Closed</div>
+			<div class="subtitle">This room has been closed</div>
+			<a [routerLink]="['/']" class="button">Home</a>
+		</div>
 	</div>
-	<button class="modal-close is-large" aria-label="close"></button>
+	<a [routerLink]="['/']" class=" modal-close is-large" aria-label="close"></a>
 </div>
