@@ -15,7 +15,7 @@
 	<input id="username" type="text" class="input" [(ngModel)]="username" />
 	<button class="button mt-2 mx-2 is-primary" (click)="updateUsername()">Update Name</button>
 
-	<button class="button buzzer is-danger" (click)="buzz()">
+	<button class="button buzzer" [ngClass]="getBuzzerClass()" (click)="buzz()">
 		<div class="title has-text-white">
 			Buzz!
 		</div>
@@ -23,11 +23,18 @@
 
 	<div class="tile is-ancestor">
 		<div class="tile is-parent" *ngFor="let user of room?.usersInRoom">
-			<div class="name-container tile is-child notification" [class.is-success]="user.buzzerPressed">
+			<div class="name-container tile is-child notification"
+				[class.is-success]="user.buzzResult && user.buzzResult?.isFirstBuzz"
+				[class.is-warning]="user.buzzResult && !user.buzzResult?.isFirstBuzz">
 				<div class="name title">
 					{{user.name}}
+				</div>
+				<div class="time subtitle" *ngIf="!user.buzzResult?.isFirstBuzz && user.buzzResult?.delay">
+					{{user.buzzResult.delay.minutes}}:{{user.buzzResult.delay.seconds}}:{{user.buzzResult.delay.milliseconds}}
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<button class="button" (click)="clear()">Clear</button>
 </div>

@@ -3,7 +3,8 @@ export enum SignalRMethod {
 	CreateRoom = 'CreateRoom',
 	JoinRoom = 'JoinRoom',
 	Buzz = 'Buzz',
-	UpdateUsername = "UpdateUsername",
+	UpdateUsername = 'UpdateUsername',
+	ClearScores = 'ClearScores',
 
 	// Server -> Client
 	RoomCreated = 'RoomCreated',
@@ -12,5 +13,7 @@ export enum SignalRMethod {
 	UserJoinedRoom = 'UserJoinedRoom',
 	UserLeftRoom = 'UserLeftRoom',
 	BuzzerPressed = 'BuzzerPressed',
-	UserUpdatedName = 'UserUpdatedName'
+	BuzzerPressSuccess = 'BuzzerPressSuccess',
+	UserUpdatedName = 'UserUpdatedName',
+	ScoresCleared = 'ScoresCleared'
 }

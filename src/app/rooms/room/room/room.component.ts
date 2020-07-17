@@ -7,6 +7,7 @@ import { SignalRMethod } from 'src/app/services/SignalR/SignalRMethod';
 import { RoomsService } from 'src/app/services/http/rooms.service';
 import { Room } from 'src/app/models/Room';
 import { User } from 'src/app/models/User';
+import { BuzzResult } from 'src/app/models/BuzzResult';
 
 @Component({
 	selector: 'app-room',
@@ -19,7 +20,7 @@ export class RoomComponent implements OnInit {
 	public room: Room;
 
 	private _roomId: number;
-	private _isLoading: boolean = true;
+	private _buzzResult: BuzzResult;
 
 	constructor(private route: ActivatedRoute, private _signalRService: SignalRService,
 		private _roomsService: RoomsService, private spinner: NgxSpinnerService, private toastr: ToastrService) {
@@ -29,7 +30,9 @@ export class RoomComponent implements OnInit {
 		_signalRService.onMethod(SignalRMethod.UserJoinedRoom, (user) => this.onUserJoin(user));
 		_signalRService.onMethod(SignalRMethod.UserLeftRoom, (userId) => this.onUserLeave(userId));
 		_signalRService.onMethod(SignalRMethod.UserUpdatedName, (userId, newUsername) => this.onUserUpdatedName(userId, newUsername));
-		_signalRService.onMethod(SignalRMethod.BuzzerPressed, (user) => this.onBuzzerPressed(user));
+		_signalRService.onMethod(SignalRMethod.BuzzerPressed, (user, buzzResult) => this.onBuzzerPressed(user, buzzResult));
+		_signalRService.onMethod(SignalRMethod.BuzzerPressSuccess, (buzzResult) => this.onBuzzPressResponse(buzzResult))
+		_signalRService.onMethod(SignalRMethod.ScoresCleared, () => this.onScoresCleared());
 	}
 
 	public async ngOnInit(): Promise<void> {
@@ -40,7 +43,6 @@ export class RoomComponent implements OnInit {
 	}
 
 	public async joinRoom(): Promise<void> {
-		this._isLoading = true;
 		this.spinner.show();
 		await this._signalRService.joinRoom(this._roomId, this.username);
 	}
@@ -53,15 +55,17 @@ export class RoomComponent implements OnInit {
 		await this._signalRService.buzz(this._roomId);
 	}
 
+	public async clear(): Promise<void> {
+		await this._signalRService.clear(this._roomId);
+	}
+
 	private onJoinSuccess(): void {
-		this._isLoading = false;
 		this.spinner.hide();
 		this.hasJoined = true;
 	}
 
 	private onJoinFail(): void {
 		this.toastr.error("Failed to join room!");
-		this._isLoading = false;
 		this.spinner.hide();
 	}
 
@@ -82,11 +86,35 @@ export class RoomComponent implements OnInit {
 		});
 	}
 
-	private onBuzzerPressed(user: User) {
+	private onBuzzerPressed(user: User, buzzResult: BuzzResult) {
 		this.room.usersInRoom.forEach(userInRoom => {
 			if (userInRoom.id == user.id) {
-				userInRoom.buzzerPressed = true;
+				userInRoom.buzzResult = buzzResult;
 			}
 		});
+	}
+
+	private onBuzzPressResponse(buzzResult: BuzzResult) {
+		this._buzzResult = buzzResult;
+	}
+
+	private onScoresCleared() {
+		this._buzzResult = undefined;
+
+		this.room.usersInRoom.forEach(user => {
+			user.buzzResult = null;
+		});
+	}
+
+	private getBuzzerClass(): string {
+		if (this._buzzResult == undefined) {
+			return 'is-danger';
+		}
+
+		if (this._buzzResult.isFirstBuzz == true) {
+			return 'is-success';
+		}
+
+		return 'is-warning';
 	}
 }
