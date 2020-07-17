@@ -28,6 +28,8 @@ export class RoomComponent implements OnInit {
 		_signalRService.onMethod(SignalRMethod.UserJoinRoomFail, () => this.onJoinFail());
 		_signalRService.onMethod(SignalRMethod.UserJoinedRoom, (user) => this.onUserJoin(user));
 		_signalRService.onMethod(SignalRMethod.UserLeftRoom, (userId) => this.onUserLeave(userId));
+		_signalRService.onMethod(SignalRMethod.UserUpdatedName, (userId, newUsername) => this.onUserUpdatedName(userId, newUsername));
+		_signalRService.onMethod(SignalRMethod.BuzzerPressed, (user) => this.onBuzzerPressed(user));
 	}
 
 	public async ngOnInit(): Promise<void> {
@@ -44,7 +46,11 @@ export class RoomComponent implements OnInit {
 	}
 
 	public async updateUsername(): Promise<void> {
+		await this._signalRService.updateUsername(this.username);
+	}
 
+	public async buzz(): Promise<void> {
+		await this._signalRService.buzz(this._roomId);
 	}
 
 	private onJoinSuccess(): void {
@@ -66,5 +72,21 @@ export class RoomComponent implements OnInit {
 	private onUserLeave(userId: string): void {
 		let newUsersInRoom = this.room.usersInRoom.filter(user => user.id != userId);
 		this.room.usersInRoom = newUsersInRoom;
+	}
+
+	private onUserUpdatedName(userId: string, newUsername: string) {
+		this.room.usersInRoom.forEach(user => {
+			if (user.id == userId) {
+				user.name = newUsername;
+			}
+		});
+	}
+
+	private onBuzzerPressed(user: User) {
+		this.room.usersInRoom.forEach(userInRoom => {
+			if (userInRoom.id == user.id) {
+				userInRoom.buzzerPressed = true;
+			}
+		});
 	}
 }

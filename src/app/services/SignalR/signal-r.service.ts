@@ -25,6 +25,14 @@ export class SignalRService {
 		return await this._hubConnection.send(SignalRMethod.JoinRoom, roomId, username);
 	}
 
+	public async updateUsername(username: string): Promise<void> {
+		return await this._hubConnection.send(SignalRMethod.UpdateUsername, username);
+	}
+
+	public async buzz(roomId: number) {
+		return await this._hubConnection.send(SignalRMethod.Buzz, roomId);
+	}
+
 	public onMethod(methodName: SignalRMethod, newMethod: (...args: any[]) => void): void {
 		let errorHandledMethod = this.createErrorHandledSignalRMethod(newMethod);
 

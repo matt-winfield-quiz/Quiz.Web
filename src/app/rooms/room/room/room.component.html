@@ -15,10 +15,16 @@
 	<input id="username" type="text" class="input" [(ngModel)]="username" />
 	<button class="button mt-2 mx-2 is-primary" (click)="updateUsername()">Update Name</button>
 
-	<div class="tile is-ancestore">
+	<button class="button buzzer is-danger" (click)="buzz()">
+		<div class="title has-text-white">
+			Buzz!
+		</div>
+	</button>
+
+	<div class="tile is-ancestor">
 		<div class="tile is-parent" *ngFor="let user of room?.usersInRoom">
-			<div class="tile is-child notification is-primary">
-				<div class="title">
+			<div class="name-container tile is-child notification" [class.is-success]="user.buzzerPressed">
+				<div class="name title">
 					{{user.name}}
 				</div>
 			</div>

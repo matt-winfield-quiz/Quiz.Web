@@ -4,6 +4,7 @@ import { StorageService } from '../../services/storage.service';
 import { ToastrService } from 'ngx-toastr';
 import { SignalRMethod } from '../../services/SignalR/SignalRMethod';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
 	selector: 'app-create-room',
@@ -16,15 +17,17 @@ export class CreateRoomComponent {
 	public success: string;
 
 	constructor(private _signalRService: SignalRService, private _storageService: StorageService,
-		private toastr: ToastrService, private router: Router) {
+		private toastr: ToastrService, private router: Router, private spinner: NgxSpinnerService) {
 		_signalRService.onMethod(SignalRMethod.RoomCreated, (token, roomId) => this.onRoomCreated(token, roomId));
 	}
 
 	public async createRoom(): Promise<void> {
+		this.spinner.show();
 		await this._signalRService.createRoom(this.roomName, this.roomPassword);
 	}
 
 	private onRoomCreated(token: string, roomId: number): void {
+		this.spinner.hide();
 		this._storageService.storeJwtToken(token);
 		this.router.navigate(['/rooms', roomId.toString()])
 		this.toastr.success("Room created succesfully!");
