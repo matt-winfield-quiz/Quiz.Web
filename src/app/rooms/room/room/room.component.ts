@@ -18,9 +18,9 @@ export class RoomComponent implements OnInit {
 	public hasJoined: boolean = false;
 	public username: string;
 	public room: Room;
+	public buzzResult: BuzzResult;
 
 	private _roomId: number;
-	private _buzzResult: BuzzResult;
 
 	constructor(private route: ActivatedRoute, private _signalRService: SignalRService,
 		private _roomsService: RoomsService, private spinner: NgxSpinnerService, private toastr: ToastrService) {
@@ -95,11 +95,11 @@ export class RoomComponent implements OnInit {
 	}
 
 	private onBuzzPressResponse(buzzResult: BuzzResult) {
-		this._buzzResult = buzzResult;
+		this.buzzResult = buzzResult;
 	}
 
 	private onScoresCleared() {
-		this._buzzResult = undefined;
+		this.buzzResult = undefined;
 
 		this.room.usersInRoom.forEach(user => {
 			user.buzzResult = null;
@@ -107,11 +107,11 @@ export class RoomComponent implements OnInit {
 	}
 
 	private getBuzzerClass(): string {
-		if (this._buzzResult == undefined) {
+		if (this.buzzResult == undefined) {
 			return 'is-danger';
 		}
 
-		if (this._buzzResult.isFirstBuzz == true) {
+		if (this.buzzResult.isFirstBuzz == true) {
 			return 'is-success';
 		}
 

@@ -15,9 +15,20 @@
 	<input id="username" type="text" class="input" [(ngModel)]="username" />
 	<button class="button mt-2 mx-2 is-primary" (click)="updateUsername()">Update Name</button>
 
-	<button class="button buzzer" [ngClass]="getBuzzerClass()" (click)="buzz()">
-		<div class="title has-text-white">
+	<button class="button buzzer notification" [ngClass]="getBuzzerClass()" (click)="buzz()">
+		<div class="title">
 			Buzz!
+		</div>
+		<div class="subtitle" *ngIf="buzzResult && buzzResult.isFirstBuzz">
+			#1
+		</div>
+		<div class="subtitle" *ngIf="!buzzResult?.isFirstBuzz && buzzResult?.delay">
+			#{{buzzResult?.position}} -
+			<span *ngIf="buzzResult.delay.minutes > 0">
+				{{buzzResult.delay.minutes}}m
+			</span>
+			<span> {{buzzResult.delay.seconds}}.</span>
+			<span>{{buzzResult.delay.milliseconds}}s</span>
 		</div>
 	</button>
 
@@ -29,8 +40,16 @@
 				<div class="name title">
 					{{user.name}}
 				</div>
+				<div class="time subtitle" *ngIf="user.buzzResult?.isFirstBuzz">
+					#{{user.buzzResult?.position}}
+				</div>
 				<div class="time subtitle" *ngIf="!user.buzzResult?.isFirstBuzz && user.buzzResult?.delay">
-					{{user.buzzResult.delay.minutes}}:{{user.buzzResult.delay.seconds}}:{{user.buzzResult.delay.milliseconds}}
+					#{{user.buzzResult?.position}} -
+					<span *ngIf="user.buzzResult.delay.minutes > 0">
+						{{user.buzzResult.delay.minutes}}m
+					</span>
+					<span> {{user.buzzResult.delay.seconds}}.</span>
+					<span>{{user.buzzResult.delay.milliseconds}}s</span>
 				</div>
 			</div>
 		</div>
