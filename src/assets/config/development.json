@@ -1,5 +1,5 @@
 {
-	"HOST_API": "https://localhost:44313",
+	"HOST_API": "http://localhost:44313",
 	"API_ENDPOINTS": {
 		"QUIZ_HUB": "/QuizHub",
 		"ROOMS": "/api/room/rooms",
