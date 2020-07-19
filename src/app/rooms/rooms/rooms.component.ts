@@ -17,16 +17,6 @@ export class RoomsComponent implements OnInit {
 	constructor(private _roomsService: RoomsService, private spinner: NgxSpinnerService,
 		private _signalRService: SignalRService, private toastr: ToastrService) {
 
-		this._signalRService.onDisconnect(() => this.toastr.error("Lost connection to server!"));
-		this._signalRService.onReconnecting(() => {
-			this.spinner.show();
-			this.toastr.warning("Connection to server lost, reconnecting...")
-		});
-		this._signalRService.onReconnected(() => {
-			this.spinner.hide();
-			this.toastr.success("Reconnected to server!");
-		});
-
 		this._signalRService.onMethod(SignalRMethod.RoomCreated, (newRoom) => this.onRoomCreated(newRoom));
 		this._signalRService.onMethod(SignalRMethod.RoomClosed, (roomId) => this.onRoomClosed(roomId));
 	}

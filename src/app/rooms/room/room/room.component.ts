@@ -27,7 +27,6 @@ export class RoomComponent implements OnInit {
 
 	constructor(private route: ActivatedRoute, private _signalRService: SignalRService,
 		private _roomsService: RoomsService, private spinner: NgxSpinnerService, private toastr: ToastrService) {
-
 		_signalRService.onMethod(SignalRMethod.UserJoinRoomSuccess, async () => await this.onJoinSuccess());
 		_signalRService.onMethod(SignalRMethod.UserJoinRoomFail, (message) => this.onJoinFail(message));
 		_signalRService.onMethod(SignalRMethod.UserJoinedRoom, (user) => this.onUserJoin(user));
