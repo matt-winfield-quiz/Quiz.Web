@@ -39,8 +39,13 @@ export class RoomComponent implements OnInit {
 	}
 
 	public async ngOnInit(): Promise<void> {
-		this.route.paramMap.subscribe(async params => {
+		this.route.paramMap.subscribe(async (params) => {
 			this._roomId = +params.get('roomId');
+			try {
+				this.room = await this._roomsService.getRoom(this._roomId);
+			} catch {
+				this.toastr.error("Room not found!");
+			}
 		})
 	}
 
@@ -66,15 +71,23 @@ export class RoomComponent implements OnInit {
 	}
 
 	private async onJoinSuccess(): Promise<void> {
-		this.spinner.hide();
+		try {
+			this.room = await this._roomsService.getRoom(this._roomId);
+		} catch {
+			this.toastr.error("Room not found!");
+		}
+
 		this.hasJoined = true;
-		this.spinner.show();
-		this.room = await this._roomsService.getRoom(this._roomId);
 		this.spinner.hide();
 	}
 
 	private onJoinFail(message: string): void {
-		this.toastr.error("Failed to join room!");
+		if (message == "ROOM_NOT_FOUND") {
+			this.toastr.error("This room could not be found!");
+		} else {
+			this.toastr.error("Failed to join room!");
+		}
+
 		if (message == "INCORRECT_PASSWORD") {
 			this.shouldDisplayIncorrectPasswordPrompt = true;
 		}
