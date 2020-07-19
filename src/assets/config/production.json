@@ -1,5 +1,5 @@
 {
-	"HOST_API": "http://192.168.1.186:5000",
+	"HOST_API": "http://quiz-api.matt-winfield.com",
 	"API_ENDPOINTS": {
 		"QUIZ_HUB": "/QuizHub",
 		"ROOMS": "/api/room/rooms",
