@@ -12,9 +12,13 @@ export class SignalRService {
 	private _hubConnection: HubConnection;
 	private _hasStarted: boolean = false;
 	private _hubStartPromise: Promise<boolean | void>;
+	private _onConnectFailBehaviours: (() => void)[] = [];
 	private _onDisconnectBehaviours: (() => void)[] = [];
 	private _onReconnectingBehaviours: (() => void)[] = [];
 	private _onReconnectedBehaviours: (() => void)[] = [];
+
+	private _connectionAttemptCount = 1;
+	private _maxConnectionAttempts = 5;
 
 	constructor(private _configService: ConfigService, private spinner: NgxSpinnerService) {
 		this._hubConnection = this.buildConnection();
@@ -22,6 +26,10 @@ export class SignalRService {
 		this._hubConnection.onreconnecting(() => this.onreconnecting());
 		this._hubConnection.onreconnected(() => this.onreconnected())
 		this.startConnection();
+	}
+
+	public onConnectFail(newMethod: () => void) {
+		this._onDisconnectBehaviours.push(newMethod);
 	}
 
 	public onDisconnect(newMethod: () => void) {
@@ -92,7 +100,14 @@ export class SignalRService {
 			.catch(error => {
 				console.warn("Error while starting connection: " + error);
 
-				setTimeout(() => this.startConnection(), 3000);
+				if (this._connectionAttemptCount++ < this._maxConnectionAttempts) {
+					setTimeout(() => this.startConnection(), 3000);
+				} else {
+					console.error("Failed to connect after " + this._connectionAttemptCount + " attempts")
+					this._onConnectFailBehaviours.forEach(onConnectFailBehaviour => {
+						onConnectFailBehaviour();
+					});
+				}
 			});
 	}
 

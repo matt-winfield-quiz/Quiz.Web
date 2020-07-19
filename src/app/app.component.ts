@@ -12,6 +12,7 @@ export class AppComponent {
 	title = 'QuizWeb';
 
 	constructor(private _signalRService: SignalRService, private toastr: ToastrService, private spinner: NgxSpinnerService) {
+		this._signalRService.onConnectFail(() => this.toastr.error("Unable to connect to server!"));
 		this._signalRService.onDisconnect(() => this.toastr.error("Lost connection to server!"));
 		this._signalRService.onReconnecting(() => {
 			this.spinner.show();
