@@ -3,6 +3,7 @@ import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { ConfigService } from '../config/config.service';
 import { ApiEndpoints } from '../config/ApiEndpoints';
 import { SignalRMethod } from './SignalRMethod';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable({
 	providedIn: 'root'
@@ -11,10 +12,28 @@ export class SignalRService {
 	private _hubConnection: HubConnection;
 	private _hasStarted: boolean = false;
 	private _hubStartPromise: Promise<boolean | void>;
+	private _onDisconnectBehaviours: (() => void)[] = [];
+	private _onReconnectingBehaviours: (() => void)[] = [];
+	private _onReconnectedBehaviours: (() => void)[] = [];
 
-	constructor(private _configService: ConfigService) {
+	constructor(private _configService: ConfigService, private spinner: NgxSpinnerService) {
 		this._hubConnection = this.buildConnection();
+		this._hubConnection.onclose(() => this.onclose())
+		this._hubConnection.onreconnecting(() => this.onreconnecting());
+		this._hubConnection.onreconnected(() => this.onreconnected())
 		this.startConnection();
+	}
+
+	public onDisconnect(newMethod: () => void) {
+		this._onDisconnectBehaviours.push(newMethod);
+	}
+
+	public onReconnecting(newMethod: () => void) {
+		this._onReconnectingBehaviours.push(newMethod);
+	}
+
+	public onReconnected(newMethod: () => void) {
+		this._onReconnectedBehaviours.push(newMethod);
 	}
 
 	public async createRoom(name: string, password: string): Promise<void> {
@@ -58,18 +77,44 @@ export class SignalRService {
 
 		return new HubConnectionBuilder()
 			.withUrl(hubUrl)
+			.withAutomaticReconnect()
 			.build();
 	}
 
 	private startConnection(): void {
+		this.spinner.show();
 		this._hubStartPromise = this._hubConnection
 			.start()
-			.then(() => this._hasStarted = true)
+			.then(() => {
+				this._hasStarted = true;
+				this.spinner.hide();
+			})
 			.catch(error => {
 				console.warn("Error while starting connection: " + error);
 
 				setTimeout(() => this.startConnection(), 3000);
 			});
+	}
+
+	private onclose(): void {
+		console.error("SignalR disconnected!");
+		this._onDisconnectBehaviours.forEach(disconnectBehaviour => {
+			disconnectBehaviour();
+		});
+	}
+
+	private onreconnecting(): void {
+		console.warn("SignalR connection lost, reconnecting");
+		this._onReconnectingBehaviours.forEach(reconnectingBehaviour => {
+			reconnectingBehaviour();
+		});
+	}
+
+	private onreconnected(): void {
+		console.log("Reconnected to SignalR");
+		this._onReconnectedBehaviours.forEach(reconnectedBehaviour => {
+			reconnectedBehaviour();
+		});
 	}
 
 	private createErrorHandledSignalRMethod(newMethod: (...args: any[]) => void): (...args: any[]) => void {

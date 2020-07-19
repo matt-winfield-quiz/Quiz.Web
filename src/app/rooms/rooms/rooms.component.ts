@@ -4,6 +4,7 @@ import { Room } from 'src/app/models/Room';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SignalRService } from 'src/app/services/SignalR/signal-r.service';
 import { SignalRMethod } from 'src/app/services/SignalR/SignalRMethod';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
 	selector: 'app-rooms',
@@ -14,7 +15,17 @@ export class RoomsComponent implements OnInit {
 	public rooms: Room[];
 
 	constructor(private _roomsService: RoomsService, private spinner: NgxSpinnerService,
-		private _signalRService: SignalRService) {
+		private _signalRService: SignalRService, private toastr: ToastrService) {
+
+		this._signalRService.onDisconnect(() => this.toastr.error("Lost connection to server!"));
+		this._signalRService.onReconnecting(() => {
+			this.spinner.show();
+			this.toastr.warning("Connection to server lost, reconnecting...")
+		});
+		this._signalRService.onReconnected(() => {
+			this.spinner.hide();
+			this.toastr.success("Reconnected to server!");
+		});
 
 		this._signalRService.onMethod(SignalRMethod.RoomCreated, (newRoom) => this.onRoomCreated(newRoom));
 		this._signalRService.onMethod(SignalRMethod.RoomClosed, (roomId) => this.onRoomClosed(roomId));
@@ -22,7 +33,11 @@ export class RoomsComponent implements OnInit {
 
 	public async ngOnInit(): Promise<void> {
 		this.spinner.show();
-		this.rooms = await this._roomsService.getRooms();
+		try {
+			this.rooms = await this._roomsService.getRooms();
+		} catch {
+			this.toastr.error("Failed to connect to server!")
+		}
 		this.spinner.hide();
 	}
 

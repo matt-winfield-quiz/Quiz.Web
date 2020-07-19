@@ -4,11 +4,11 @@
 </div>
 <div class="section">
 	<div class="row header columns my-2 has-background-grey has-text-light">
-		<div class="column is-one-fifth">Room Id</div>
+		<div class="column id is-one-fifth">Room Id</div>
 		<div class="column">Room Name</div>
 	</div>
 	<div class="row columns my-2" *ngFor="let room of rooms">
-		<div class="column is-one-fifth">{{room.id}}</div>
+		<div class="column id is-one-fifth">{{room.id}}</div>
 		<div class="column">{{room.name}}</div>
 		<div class="column is-one-fifth">
 			<a [routerLink]="['/rooms', room.id]" class="button is-primary">Join</a>
