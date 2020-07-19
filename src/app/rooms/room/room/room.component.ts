@@ -26,6 +26,8 @@ export class RoomComponent implements OnInit {
 
 	private _roomId: number;
 	private _scores: { [userId: string]: number };
+	private _successAudio = new Audio('/assets/success.wav');
+	private _failAudio = new Audio('/assets/fail.wav');
 
 	constructor(private route: ActivatedRoute, private _signalRService: SignalRService,
 		private _roomsService: RoomsService, private spinner: NgxSpinnerService, private toastr: ToastrService,
@@ -41,6 +43,8 @@ export class RoomComponent implements OnInit {
 		_signalRService.onMethod(SignalRMethod.ScoresCleared, () => this.onScoresCleared());
 		_signalRService.onMethod(SignalRMethod.RoomClosed, (roomId) => this.onRoomClosed(roomId));
 		_signalRService.onMethod(SignalRMethod.UserScoreUpdated, (userId, newScore) => this.onUserScoreUpdated(userId, newScore));
+
+		this._failAudio.volume = 0.3;
 	}
 
 	public async ngOnInit(): Promise<void> {
@@ -149,6 +153,13 @@ export class RoomComponent implements OnInit {
 
 	private onBuzzPressResponse(buzzResult: BuzzResult): void {
 		this.buzzResult = buzzResult;
+		if (this.buzzResult.isFirstBuzz) {
+			this.playSuccessAudio();
+			window.navigator.vibrate([10, 20, 200]);
+		} else {
+			this.playFailAudio();
+			window.navigator.vibrate(100);
+		}
 	}
 
 	private onScoresCleared(): void {
@@ -179,5 +190,15 @@ export class RoomComponent implements OnInit {
 		}
 
 		return 'is-warning';
+	}
+
+	private playSuccessAudio(): void {
+		this._successAudio.currentTime = 0;
+		this._successAudio.play();
+	}
+
+	private playFailAudio(): void {
+		this._failAudio.currentTime = 0;
+		this._failAudio.play();
 	}
 }
