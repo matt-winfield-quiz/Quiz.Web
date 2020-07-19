@@ -3,6 +3,7 @@
 	"API_ENDPOINTS": {
 		"QUIZ_HUB": "/QuizHub",
 		"ROOMS": "/api/room/rooms",
-		"ROOM": "/api/room"
+		"ROOM": "/api/room",
+		"ROOM_SCORES": "/api/room/scores"
 	}
 }
