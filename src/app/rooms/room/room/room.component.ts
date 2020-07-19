@@ -8,6 +8,7 @@ import { RoomsService } from 'src/app/services/http/rooms.service';
 import { Room } from 'src/app/models/Room';
 import { User } from 'src/app/models/User';
 import { BuzzResult } from 'src/app/models/BuzzResult';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
 	selector: 'app-room',
@@ -26,7 +27,9 @@ export class RoomComponent implements OnInit {
 	private _roomId: number;
 
 	constructor(private route: ActivatedRoute, private _signalRService: SignalRService,
-		private _roomsService: RoomsService, private spinner: NgxSpinnerService, private toastr: ToastrService) {
+		private _roomsService: RoomsService, private spinner: NgxSpinnerService, private toastr: ToastrService,
+		private _storageService: StorageService) {
+
 		_signalRService.onMethod(SignalRMethod.UserJoinRoomSuccess, async () => await this.onJoinSuccess());
 		_signalRService.onMethod(SignalRMethod.UserJoinRoomFail, (message) => this.onJoinFail(message));
 		_signalRService.onMethod(SignalRMethod.UserJoinedRoom, (user) => this.onUserJoin(user));
@@ -63,11 +66,17 @@ export class RoomComponent implements OnInit {
 	}
 
 	public async clear(): Promise<void> {
-		await this._signalRService.clear(this._roomId);
+		var jwtToken = this._storageService.getJwtToken(this._roomId);
+		await this._signalRService.clear(this._roomId, jwtToken);
 	}
 
 	public async closeRoom(): Promise<void> {
-		await this._signalRService.closeRoom(this._roomId);
+		var jwtToken = this._storageService.getJwtToken(this._roomId);
+		await this._signalRService.closeRoom(this._roomId, jwtToken);
+	}
+
+	public isRoomOwner(): boolean {
+		return this._storageService.getJwtToken(this._roomId) != null;
 	}
 
 	private async onJoinSuccess(): Promise<void> {

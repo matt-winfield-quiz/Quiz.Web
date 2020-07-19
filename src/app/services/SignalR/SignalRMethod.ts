@@ -18,5 +18,6 @@ export enum SignalRMethod {
 	BuzzerPressSuccess = 'BuzzerPressSuccess',
 	UserUpdatedName = 'UserUpdatedName',
 	ScoresCleared = 'ScoresCleared',
-	RoomClosed = 'RoomClosed'
+	RoomClosed = 'RoomClosed',
+	InvalidJwtToken = 'InvalidJwtToken'
 }

@@ -60,12 +60,12 @@ export class SignalRService {
 		return await this._hubConnection.send(SignalRMethod.Buzz, roomId);
 	}
 
-	public async clear(roomId: number) {
-		return await this._hubConnection.send(SignalRMethod.ClearScores, roomId);
+	public async clear(roomId: number, jwtToken: string) {
+		return await this._hubConnection.send(SignalRMethod.ClearScores, roomId, jwtToken);
 	}
 
-	public async closeRoom(roomId: number) {
-		return await this._hubConnection.send(SignalRMethod.RemoveRoom, roomId);
+	public async closeRoom(roomId: number, jwtToken: string) {
+		return await this._hubConnection.send(SignalRMethod.RemoveRoom, roomId, jwtToken);
 	}
 
 	public onMethod(methodName: SignalRMethod, newMethod: (...args: any[]) => void): void {

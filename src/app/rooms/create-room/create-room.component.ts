@@ -28,7 +28,7 @@ export class CreateRoomComponent {
 
 	private onRoomCreated(token: string, roomId: number): void {
 		this.spinner.hide();
-		this._storageService.storeJwtToken(token);
+		this._storageService.storeJwtToken(roomId, token);
 		this.router.navigate(['/rooms', roomId.toString()])
 		this.toastr.success("Room created succesfully!");
 	}

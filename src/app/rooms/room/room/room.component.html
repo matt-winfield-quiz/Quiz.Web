@@ -66,8 +66,10 @@
 		</div>
 	</div>
 
-	<button class="button" (click)="clear()">Clear</button>
-	<button class="button is-danger mx-2" (click)="closeRoom()">Close room</button>
+	<ng-container *ngIf="isRoomOwner()">
+		<button class="button" (click)="clear()">Clear</button>
+		<button class="button is-danger mx-2" (click)="closeRoom()">Close room</button>
+	</ng-container>
 </div>
 
 <div class="modal" [class.is-active]="shouldDisplayRoomClosedModal">

@@ -8,11 +8,15 @@ export class StorageService {
 
 	constructor() { }
 
-	public storeJwtToken(token: string): void {
-		sessionStorage.setItem(this.jwtTokenKey, token);
+	public storeJwtToken(roomId: number, token: string): void {
+		sessionStorage.setItem(this.jwtTokenKey + roomId, token);
 	}
 
-	public getJwtToken(): string {
-		return sessionStorage.getItem(this.jwtTokenKey);
+	public getJwtToken(roomId: number): string {
+		return sessionStorage.getItem(this.jwtTokenKey + roomId);
+	}
+
+	public clearToken(roomId: number): void {
+		sessionStorage.removeItem(this.jwtTokenKey + roomId);
 	}
 }
