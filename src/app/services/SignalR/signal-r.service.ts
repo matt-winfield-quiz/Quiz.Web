@@ -68,6 +68,14 @@ export class SignalRService {
 		return await this._hubConnection.send(SignalRMethod.RemoveRoom, roomId, jwtToken);
 	}
 
+	public async incrementUserScore(userId: string, roomId: number, jwtToken: string) {
+		return await this._hubConnection.send(SignalRMethod.IncrementUserScore, userId, roomId, jwtToken);
+	}
+
+	public async decrementUserScore(userId: string, roomId: number, jwtToken: string) {
+		return await this._hubConnection.send(SignalRMethod.DecrementUserScore, userId, roomId, jwtToken);
+	}
+
 	public onMethod(methodName: SignalRMethod, newMethod: (...args: any[]) => void): void {
 		let errorHandledMethod = this.createErrorHandledSignalRMethod(newMethod);
 

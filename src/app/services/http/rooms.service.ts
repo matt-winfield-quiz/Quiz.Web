@@ -23,4 +23,12 @@ export class RoomsService {
 
 		return await this._http.get<Room>(url).toPromise();
 	}
+
+	public async getRoomScores(roomId: number): Promise<{ [userId: string]: number }> {
+		let baseUrl: string = this._configService.getApiEndpoint("ROOM_SCORES");
+
+		let url: string = new UrlBuilder(baseUrl).addQuery('roomId', roomId.toString()).build();
+
+		return await this._http.get<{ [userId: string]: number }>(url).toPromise();
+	}
 }

@@ -25,6 +25,7 @@ export class RoomComponent implements OnInit {
 	public shouldDisplayIncorrectPasswordPrompt: boolean = false;
 
 	private _roomId: number;
+	private _scores: { [userId: string]: number };
 
 	constructor(private route: ActivatedRoute, private _signalRService: SignalRService,
 		private _roomsService: RoomsService, private spinner: NgxSpinnerService, private toastr: ToastrService,
@@ -38,7 +39,8 @@ export class RoomComponent implements OnInit {
 		_signalRService.onMethod(SignalRMethod.BuzzerPressed, (user, buzzResult) => this.onBuzzerPressed(user, buzzResult));
 		_signalRService.onMethod(SignalRMethod.BuzzerPressSuccess, (buzzResult) => this.onBuzzPressResponse(buzzResult))
 		_signalRService.onMethod(SignalRMethod.ScoresCleared, () => this.onScoresCleared());
-		_signalRService.onMethod(SignalRMethod.RoomClosed, (roomId) => this.onRoomClosed(roomId))
+		_signalRService.onMethod(SignalRMethod.RoomClosed, (roomId) => this.onRoomClosed(roomId));
+		_signalRService.onMethod(SignalRMethod.UserScoreUpdated, (userId, newScore) => this.onUserScoreUpdated(userId, newScore));
 	}
 
 	public async ngOnInit(): Promise<void> {
@@ -79,7 +81,22 @@ export class RoomComponent implements OnInit {
 		return this._storageService.getJwtToken(this._roomId) != null;
 	}
 
+	public async incrementUserScore(userId: string): Promise<void> {
+		var jwtToken = this._storageService.getJwtToken(this._roomId);
+		await this._signalRService.incrementUserScore(userId, this._roomId, jwtToken);
+	}
+
+	public async decrementUserScore(userId: string): Promise<void> {
+		var jwtToken = this._storageService.getJwtToken(this._roomId);
+		await this._signalRService.decrementUserScore(userId, this._roomId, jwtToken);
+	}
+
+	public getUserScore(userId: string): number {
+		return this._scores[userId] ?? 0;
+	}
+
 	private async onJoinSuccess(): Promise<void> {
+		this._scores = await this._roomsService.getRoomScores(this._roomId);
 		try {
 			this.room = await this._roomsService.getRoom(this._roomId);
 		} catch {
@@ -146,6 +163,10 @@ export class RoomComponent implements OnInit {
 		if (roomId == this._roomId) {
 			this.shouldDisplayRoomClosedModal = true;
 		}
+	}
+
+	private onUserScoreUpdated(userId: string, newScore: number): void {
+		this._scores[userId] = newScore;
 	}
 
 	private getBuzzerClass(): string {

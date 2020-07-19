@@ -6,6 +6,8 @@ export enum SignalRMethod {
 	UpdateUsername = 'UpdateUsername',
 	ClearScores = 'ClearScores',
 	RemoveRoom = 'RemoveRoom',
+	IncrementUserScore = 'IncrementUserScore',
+	DecrementUserScore = 'DecrementUserScore',
 
 	// Server -> Client
 	RoomCreateSuccess = 'RoomCreateSuccess',
@@ -19,5 +21,6 @@ export enum SignalRMethod {
 	UserUpdatedName = 'UserUpdatedName',
 	ScoresCleared = 'ScoresCleared',
 	RoomClosed = 'RoomClosed',
-	InvalidJwtToken = 'InvalidJwtToken'
+	InvalidJwtToken = 'InvalidJwtToken',
+	UserScoreUpdated = 'UserScoreUpdated'
 }

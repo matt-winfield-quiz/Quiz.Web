@@ -62,13 +62,20 @@
 					<span> {{user.buzzResult.delay.seconds}}.</span>
 					<span>{{user.buzzResult.delay.milliseconds}}s</span>
 				</div>
+				<div class="subtitle">
+					Points: {{getUserScore(user.id)}}
+				</div>
+				<div *ngIf="isRoomOwner()">
+					<button class="button mx-2" (click)="incrementUserScore(user.id)">Add</button>
+					<button class="button mx-2" (click)="decrementUserScore(user.id)">Subtract</button>
+				</div>
 			</div>
 		</div>
 	</div>
 
 	<ng-container *ngIf="isRoomOwner()">
-		<button class="button" (click)="clear()">Clear</button>
-		<button class="button is-danger mx-2" (click)="closeRoom()">Close room</button>
+		<button class="button mx-3 my-4" (click)="clear()">Clear Buzzes</button>
+		<button class="button is-danger mx-3 my-4" (click)="closeRoom()">Close room</button>
 	</ng-container>
 </div>
 
