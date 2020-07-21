@@ -155,7 +155,7 @@ export class RoomComponent implements OnInit {
 		this.buzzResult = buzzResult;
 		if (this.buzzResult.isFirstBuzz) {
 			this.playSuccessAudio();
-			window.navigator.vibrate([10, 20, 200]);
+			window.navigator.vibrate([50, 100, 500]);
 		} else {
 			this.playFailAudio();
 			window.navigator.vibrate(100);
