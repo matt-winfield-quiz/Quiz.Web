@@ -1,5 +1,5 @@
 {
-	"HOST_API": "http://quiz-api.matt-winfield.com",
+	"HOST_API": "https://quiz-api.matt-winfield.com",
 	"API_ENDPOINTS": {
 		"QUIZ_HUB": "/QuizHub",
 		"ROOMS": "/api/room/rooms",
