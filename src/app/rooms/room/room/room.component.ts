@@ -64,6 +64,7 @@ export class RoomComponent implements OnInit {
 	}
 
 	public async updateUsername(): Promise<void> {
+		if (this.username == null || this.username.trim() === '') return;
 		await this._signalRService.updateUsername(this.username);
 	}
 
